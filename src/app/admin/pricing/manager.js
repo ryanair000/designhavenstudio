@@ -1,0 +1,3 @@
+import { ResourceManager } from '@/components/admin/resource-manager'
+const fields={name:{label:'Package name',required:true},price_label:{label:'Price label',required:true},summary:{label:'Summary',type:'textarea'},features:{label:'Included features',type:'list'},badge:{label:'Badge'},highlighted:{label:'Highlight package',type:'checkbox'},cta_label:{label:'Button label'},sort_order:{label:'Display order',type:'number'},visible:{label:'Show on website',type:'checkbox',default:true}}
+export function PricingManager(){return <ResourceManager resource="packages" title="Packages" description="Update package information and visibility." fields={fields}/>}

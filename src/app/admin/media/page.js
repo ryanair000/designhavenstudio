@@ -1,0 +1,3 @@
+import Link from 'next/link'
+import { ProtectedPage } from '@/components/admin/protected-page'
+export default function Page(){return <ProtectedPage title="Media library" subtitle="Manage reusable website images"><div className="admin-content"><div className="admin-page-head"><div><h2>Media library</h2><p>The connected storage bucket supports images and PDF files up to 10 MB.</p></div></div><div className="admin-card"><h3>Project artwork</h3><p>Add hosted image URLs to project and client records. These images are used immediately by the public portfolio.</p><Link className="button button-primary" href="/admin/projects">Manage project artwork</Link></div></div></ProtectedPage>}

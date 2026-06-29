@@ -1,0 +1,4 @@
+import { ProtectedPage } from '@/components/admin/protected-page'
+import { ResourceManager } from '@/components/admin/resource-manager'
+const fields={quote:{label:'Client quote',type:'textarea',required:true},client_name:{label:'Client name',required:true},company:{label:'Business or context'},verified:{label:'Verified quote',type:'checkbox'},approval_confirmed:{label:'Approved for public use',type:'checkbox'},sort_order:{label:'Display order',type:'number'},visible:{label:'Show on website',type:'checkbox',default:true}}
+export default function Page(){return <ProtectedPage title="Testimonials" subtitle="Verify and publish client feedback"><ResourceManager resource="testimonials" title="Testimonials" description="Only approved and verified quotes appear publicly." fields={fields}/></ProtectedPage>}

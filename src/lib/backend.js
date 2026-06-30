@@ -1,3 +1,5 @@
+import { clientCategories, clientProjects } from './client-projects'
+
 export const FUNCTIONS_URL = process.env.NEXT_PUBLIC_DESIGNHAVEN_FUNCTIONS_URL || 'https://llmbgigriltgikzmfmnf.functions.supabase.co'
 
 export const endpoints = {
@@ -55,13 +57,45 @@ export const fallbackData = {
   settings:{siteName:'DesignHaven Studio',tagline:'Creative Poster Studio',businessEmail:'hello@designhaven.studio',phone:'+254 700 000 000',whatsapp:'+254 700 000 000',instagram:'designhaven.studio',footerText:'Bold poster design for businesses, brands and individuals.'}
 }
 
+function mergeBySlug(primary = [], secondary = []) {
+  const seen = new Set(primary.map((item) => item.slug).filter(Boolean))
+  return [...primary, ...secondary.filter((item) => !seen.has(item.slug))]
+}
+
+function categoryKey(category = {}) {
+  return category.slug || category.name?.toLowerCase().replaceAll(' ', '-').replaceAll('&', '').replaceAll('--', '-')
+}
+
+function mergeCategories(primary = [], secondary = []) {
+  const seen = new Set(primary.map(categoryKey).filter(Boolean))
+  return [...primary, ...secondary.filter((category) => !seen.has(categoryKey(category)))]
+}
+
+function withClientPortfolio(data) {
+  const projects = mergeBySlug(clientProjects, Array.isArray(data.projects) ? data.projects : [])
+  const categories = mergeCategories(clientCategories, Array.isArray(data.categories) ? data.categories : [])
+  const pages = {
+    ...data.pages,
+    home: {
+      ...(data.pages?.home || {}),
+      metrics: [
+        { value: '45+', label: 'Designs completed' },
+        { value: '8', label: 'Creative categories' },
+        { value: 'Fast', label: 'Response and delivery' },
+        { value: '100%', label: 'Custom-made' }
+      ]
+    }
+  }
+  return { ...data, projects, categories, pages }
+}
+
 export async function getPublicData() {
   try {
     const response = await fetch(endpoints.public, { next: { revalidate: 60 }, signal: AbortSignal.timeout(8000) })
     if (!response.ok) throw new Error('Public content API unavailable')
-    return await response.json()
+    return withClientPortfolio(await response.json())
   } catch {
-    return fallbackData
+    return withClientPortfolio(fallbackData)
   }
 }
 

@@ -12,6 +12,7 @@ export default async function Home() {
   const home = data.pages?.home || {}
   const projects = data.projects || []
   const featured = projects.filter((project) => project.featured).slice(0, 3)
+  const heroProjects = featured.length ? featured : projects.slice(0, 3)
   return (
     <>
       <SiteHeader/>
@@ -27,7 +28,7 @@ export default async function Home() {
                 <Link className="button button-secondary button-large" href="/work">View our work</Link>
               </div>
             </div>
-            <div className="hero-art">{projects.slice(0, 3).map((project, index) => <div className={'hero-poster hero-poster-' + (index + 1)} key={project.id}><PosterVisual project={project} compact/></div>)}</div>
+            <div className="hero-art">{heroProjects.map((project, index) => <div className={'hero-poster hero-poster-' + (index + 1)} key={project.id}><PosterVisual project={project} compact/></div>)}</div>
           </div>
         </section>
         <section className="metrics"><div className="container metric-grid">{(home.metrics || []).map((metric) => <div key={metric.label}><strong>{metric.value}</strong><span>{metric.label}</span></div>)}</div></section>

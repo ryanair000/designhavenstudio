@@ -1,3 +1,32 @@
 import Link from 'next/link'
 import { ProtectedPage } from '@/components/admin/protected-page'
-export default function Page(){return <ProtectedPage title="Media library" subtitle="Manage reusable website images"><div className="admin-content"><div className="admin-page-head"><div><h2>Media library</h2><p>The connected storage bucket supports images and PDF files up to 10 MB.</p></div></div><div className="admin-card"><h3>Project artwork</h3><p>Add hosted image URLs to project and client records. These images are used immediately by the public portfolio.</p><Link className="button button-primary" href="/admin/projects">Manage project artwork</Link></div></div></ProtectedPage>}
+import { clientProjects } from '@/lib/client-projects'
+
+export default function Page(){
+  const assets = clientProjects.filter((project) => project.artwork_url)
+  return (
+    <ProtectedPage title="Media library" subtitle="Manage reusable website images">
+      <div className="admin-content">
+        <div className="admin-page-head">
+          <div>
+            <h2>Project artwork</h2>
+            <p>Copy these paths into project records or use them as references when replacing artwork.</p>
+          </div>
+          <Link className="button button-primary" href="/admin/projects">Manage projects</Link>
+        </div>
+        <div className="media-grid">
+          {assets.map((project) => (
+            <article className="media-card" key={project.id}>
+              <div className="media-thumb" style={{ backgroundImage:`url(${project.artwork_url})` }} role="img" aria-label={project.alt_text || project.title}/>
+              <div>
+                <h3>{project.title}</h3>
+                <p>{project.category}</p>
+                <code>{project.artwork_url}</code>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </ProtectedPage>
+  )
+}
